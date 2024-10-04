@@ -1,35 +1,38 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import './index.css'
 
-function App() {
-  const [count, setCount] = useState(0)
-
+export default function App() {
+  const [gifts, setGifts] = useState(['medias', 'camiseta', 'gafas'])
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
+    <main className="flex flex-col items-center  w-full">
+      {/* --- Inicio mensaje a borrar */}
+      {/* <div
+        style={{
+          margin: 24,
+          padding: 12,
+          backgroundColor: 'gold',
+          display: 'grid',
+          borderRadius: 4,
+          gap: 12,
+        }}
+        >
         <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+          🔔 Recordá que la idea es empezar la app de 0 cada día, no editar la
+          del día anterior, si no te dan los tiempos o te parece mucho, editá la
+          anterior, mejor poco que nada! 🔔
+          </p>
+          
+          <p>Borrá esta caja y empezá!</p>
+        </div> */}
+      {/* --- Fin mensaje a borrar */}
+      <h1 className="text-3xl font-bold underline my-4">Regalos:</h1>
+      <div className="w-full flex justify-center">
+        <ul>
+          {gifts.map((gift) => (
+            <li key={gift}>{gift}</li>
+          ))}
+        </ul>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    </main>
   )
 }
-
-export default App
