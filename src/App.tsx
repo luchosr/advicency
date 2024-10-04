@@ -4,7 +4,7 @@ import './index.css'
 export default function App() {
   const [gifts, setGifts] = useState(['medias', 'camiseta', 'gafas'])
   return (
-    <main className="flex flex-col items-center  w-full">
+    <main className="flex flex-col items-center">
       {/* --- Inicio mensaje a borrar */}
       {/* <div
         style={{
