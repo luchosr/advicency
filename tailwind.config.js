@@ -4,7 +4,10 @@ export default {
   theme: {
     extend: {
       backgroundImage: {
-        'xmass': "url('/src/images/xmas.jpg')",
+        xmass: "url('/src/images/xmas.jpg')",
+      },
+      fontFamily: {
+        'xmas-font': ['Mountains of Christmas', 'serif'],
       },
     },
   },
