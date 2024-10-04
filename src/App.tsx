@@ -4,7 +4,7 @@ import './index.css'
 export default function App() {
   const [gifts, setGifts] = useState(['medias', 'camiseta', 'gafas'])
   return (
-    <main className="flex flex-col items-center">
+    <main className="flex flex-col items-center h-screen bg-xmass bg-cover ">
       {/* --- Inicio mensaje a borrar */}
       {/* <div
         style={{
@@ -25,7 +25,7 @@ export default function App() {
           <p>Borrá esta caja y empezá!</p>
         </div> */}
       {/* --- Fin mensaje a borrar */}
-      <h1 className="text-3xl font-bold underline my-4">Regalos:</h1>
+      <h1 className="text-3xl font-bold underline mt-80 mb-6">Regalos:</h1>
       <div className="w-full flex justify-center">
         <ul>
           {gifts.map((gift) => (
