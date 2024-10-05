@@ -1,10 +1,24 @@
-import { useState } from 'react'
-import './index.css'
+import { useState } from 'react';
+import './index.css';
 
+type Gift = {
+  name: string;
+  id: number;
+};
 export default function App() {
-  const [gifts, setGifts] = useState(['medias', 'camiseta', 'gafas'])
+  const [gift, setGift] = useState<Gift['name']>('');
+  const [gifts, setGifts] = useState<Gift[]>([]);
+
+  const handleGiftSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setGifts([...gifts, { name: gift, id: +Date.now() }]);
+    setGift('');
+  };
+  const handleGiftChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setGift(event.target.value);
+  };
   return (
-    <main className="flex justify-center h-screen bg-xmass bg-cover ">
+    <main className=" flex items-center  justify-center h-screen bg-xmass bg-cover ">
       {/* --- Inicio mensaje a borrar */}
       {/* <div
         style={{
@@ -26,16 +40,32 @@ export default function App() {
         </div> */}
       {/* --- Fin mensaje a borrar */}
 
-      <div className=" flex flex-col w-80 h-52 pt-6 items-center  mt-64 bg-white">
+      <div className=" flex items-center  justify-center flex-col 	border border-red-600 border-4 w-80   pt-6  bg-white">
+        {/* <div className="bg-white "> */}
         <h1 className="text-5xl font-bold underline mb-6 font-xmas-font ">
           Regalos:
         </h1>
-        <ul>
+
+        <form action="" onSubmit={handleGiftSubmit}>
+          <input
+            type="text"
+            onChange={handleGiftChange}
+            value={gift}
+            className="border border-green-300 rounded-md border-2  "
+          />
+          <button
+            type="submit"
+            className="border rounded-md border-red-500 m-4 p-2 bg-red-400 text-slate-200 font-bold"
+          >
+            Agregar
+          </button>
+        </form>
+        <ul className="flex flex-col justify-start w-full p-4">
           {gifts.map((gift) => (
-            <li key={gift}>{gift}</li>
+            <li key={gift.id}>{gift.name}</li>
           ))}
         </ul>
       </div>
     </main>
-  )
+  );
 }
