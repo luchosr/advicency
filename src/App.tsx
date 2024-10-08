@@ -17,6 +17,10 @@ export default function App() {
   const handleGiftChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setGift(event.target.value);
   };
+
+  const handleGiftDelete = (id: Gift['id']) => {
+    setGifts(gifts.filter((gift) => gift.id !== id));
+  };
   return (
     <main className=" flex items-center  justify-center h-screen bg-xmass bg-cover ">
       {/* --- Inicio mensaje a borrar */}
@@ -51,7 +55,7 @@ export default function App() {
             type="text"
             onChange={handleGiftChange}
             value={gift}
-            className="border border-green-300 rounded-md border-2  "
+            className="border border-green-300 rounded-md border-2 "
           />
           <button
             type="submit"
@@ -60,9 +64,17 @@ export default function App() {
             Agregar
           </button>
         </form>
-        <ul className="flex flex-col justify-start w-full p-4">
+        <ul className="flex flex-col justify-start w-full p-12">
           {gifts.map((gift) => (
-            <li key={gift.id}>{gift.name}</li>
+            <li key={gift.id}>
+              {gift.name}{' '}
+              <button
+                className="border bg-red-800 rounded-md"
+                onClick={() => handleGiftDelete(gift.id)}
+              >
+                ❌
+              </button>
+            </li>
           ))}
         </ul>
       </div>
