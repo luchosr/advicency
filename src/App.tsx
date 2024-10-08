@@ -18,6 +18,12 @@ export default function App() {
 
   const handleGiftSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const isGiftAlreadyAdded = gifts.some(
+      (addedGift) => addedGift.name === gift
+    );
+    if (gift === '' || isGiftAlreadyAdded) {
+      return;
+    }
     setGifts([...gifts, { name: gift, id: +Date.now() }]);
     setGift('');
   };
