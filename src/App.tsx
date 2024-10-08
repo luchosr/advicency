@@ -10,6 +10,7 @@ enum TextStrings {
   mainHeader = 'Regalos:',
   mainInputButton = 'Agregar',
   clearGiftsButton = 'Borrar lista',
+  fallbackText = 'No hay regalos Grinch. Agrega uno!',
 }
 export default function App() {
   const [gift, setGift] = useState<Gift['name']>('');
@@ -52,19 +53,26 @@ export default function App() {
             {TextStrings.mainInputButton}
           </button>
         </form>
-        <ul className="flex flex-col justify-start w-full px-6 pt-4">
-          {gifts.map((gift) => (
-            <article className="w-full flex flex-row justify-between">
-              <li key={gift.id}>{gift.name} </li>
-              <button
-                className="border bg-red-800 rounded-md text-slate-50 p-1"
-                onClick={() => handleGiftDelete(gift.id)}
-              >
-                ❌
-              </button>
-            </article>
-          ))}
-        </ul>
+        {gifts.length > 0 ? (
+          <ul className="flex flex-col justify-start w-full px-6 pt-4">
+            {gifts.map((gift) => (
+              <article className="w-full flex flex-row justify-between">
+                <li key={gift.id}>{gift.name} </li>
+                <button
+                  className="border bg-red-800 rounded-md text-slate-50 p-1"
+                  onClick={() => handleGiftDelete(gift.id)}
+                >
+                  ❌
+                </button>
+              </article>
+            ))}
+          </ul>
+        ) : (
+          <article className="m-4">
+            <p>{TextStrings.fallbackText}</p>
+          </article>
+        )}
+
         <button
           className="border rounded-md border-red-500 m-2 p-2 bg-red-400 text-slate-50 font-bold"
           onClick={handleGiftClear}
