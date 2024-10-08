@@ -21,6 +21,10 @@ export default function App() {
   const handleGiftDelete = (id: Gift['id']) => {
     setGifts(gifts.filter((gift) => gift.id !== id));
   };
+
+  const handleGiftClear = () => {
+    setGifts([]);
+  };
   return (
     <main className=" flex items-center  justify-center h-screen bg-xmass bg-cover ">
       {/* --- Inicio mensaje a borrar */}
@@ -55,28 +59,34 @@ export default function App() {
             type="text"
             onChange={handleGiftChange}
             value={gift}
-            className="border border-green-300 rounded-md border-2 "
+            className="border border-green-300 rounded-md border-2 px-2 "
           />
           <button
             type="submit"
-            className="border rounded-md border-red-500 m-4 p-2 bg-red-400 text-slate-200 font-bold"
+            className="border rounded-md border-red-500 mx-2 p-2 bg-red-400 text-slate-50 font-bold"
           >
             Agregar
           </button>
         </form>
-        <ul className="flex flex-col justify-start w-full p-12">
+        <ul className="flex flex-col justify-start w-full px-6 pt-4">
           {gifts.map((gift) => (
-            <li key={gift.id}>
-              {gift.name}{' '}
+            <article className="w-full flex flex-row justify-between">
+              <li key={gift.id}>{gift.name} </li>
               <button
-                className="border bg-red-800 rounded-md"
+                className="border bg-red-800 rounded-md text-slate-50 p-1"
                 onClick={() => handleGiftDelete(gift.id)}
               >
                 ❌
               </button>
-            </li>
+            </article>
           ))}
         </ul>
+        <button
+          className="border rounded-md border-red-500 m-2 p-2 bg-red-400 text-slate-50 font-bold"
+          onClick={handleGiftClear}
+        >
+          Borrar todos los regalos
+        </button>
       </div>
     </main>
   );
