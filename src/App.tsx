@@ -5,6 +5,12 @@ type Gift = {
   name: string;
   id: number;
 };
+
+enum TextStrings {
+  mainHeader = 'Regalos:',
+  mainInputButton = 'Agregar',
+  clearGiftsButton = 'Borrar lista',
+}
 export default function App() {
   const [gift, setGift] = useState<Gift['name']>('');
   const [gifts, setGifts] = useState<Gift[]>([]);
@@ -26,32 +32,10 @@ export default function App() {
     setGifts([]);
   };
   return (
-    <main className=" flex items-center  justify-center h-screen bg-xmass bg-cover ">
-      {/* --- Inicio mensaje a borrar */}
-      {/* <div
-        style={{
-          margin: 24,
-          padding: 12,
-          backgroundColor: 'gold',
-          display: 'grid',
-          borderRadius: 4,
-          gap: 12,
-        }}
-        >
-        <p>
-          🔔 Recordá que la idea es empezar la app de 0 cada día, no editar la
-          del día anterior, si no te dan los tiempos o te parece mucho, editá la
-          anterior, mejor poco que nada! 🔔
-          </p>
-          
-          <p>Borrá esta caja y empezá!</p>
-        </div> */}
-      {/* --- Fin mensaje a borrar */}
-
-      <div className=" flex items-center  justify-center flex-col 	border border-red-600 border-4 w-80   pt-6  bg-white">
-        {/* <div className="bg-white "> */}
+    <main className=" flex items-center justify-center h-screen bg-xmass bg-cover ">
+      <div className=" flex items-center justify-center flex-col border border-red-600 border-4 w-80  pt-6 bg-white">
         <h1 className="text-5xl font-bold underline mb-6 font-xmas-font ">
-          Regalos:
+          {TextStrings.mainHeader}
         </h1>
 
         <form action="" onSubmit={handleGiftSubmit}>
@@ -65,7 +49,7 @@ export default function App() {
             type="submit"
             className="border rounded-md border-red-500 mx-2 p-2 bg-red-400 text-slate-50 font-bold"
           >
-            Agregar
+            {TextStrings.mainInputButton}
           </button>
         </form>
         <ul className="flex flex-col justify-start w-full px-6 pt-4">
@@ -85,7 +69,7 @@ export default function App() {
           className="border rounded-md border-red-500 m-2 p-2 bg-red-400 text-slate-50 font-bold"
           onClick={handleGiftClear}
         >
-          Borrar todos los regalos
+          {TextStrings.clearGiftsButton}
         </button>
       </div>
     </main>
