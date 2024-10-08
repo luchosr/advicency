@@ -40,18 +40,32 @@ export default function App() {
   };
   return (
     <main className=" flex items-center justify-center h-screen bg-xmass bg-cover ">
-      <div className=" flex items-center justify-center flex-col border border-red-600 border-4 w-80  pt-6 bg-white">
+      <div className=" flex items-center justify-center flex-col border border-red-600 border-4 w-auto pt-6 bg-white">
         <h1 className="text-5xl font-bold underline mb-6 font-xmas-font ">
           {TextStrings.mainHeader}
         </h1>
 
-        <form action="" onSubmit={handleGiftSubmit}>
+        <form
+          action=""
+          onSubmit={handleGiftSubmit}
+          className="flex flex-row justify-between mx-4 w-96"
+        >
           <input
             type="text"
             onChange={handleGiftChange}
             value={gift}
-            className="border border-green-300 rounded-md border-2 px-2 "
+            placeholder="Ingresa un regalo"
+            className="border border-green-300 rounded-md border-2 px-2 w-1/2 "
           />
+          <input
+            type="number"
+            id="quantity"
+            name="quantity"
+            min="1"
+            max="5"
+            className="border border-black w-8 rounded-md"
+          />
+
           <button
             type="submit"
             className="border rounded-md border-red-500 mx-2 p-2 bg-red-400 text-slate-50 font-bold"
@@ -75,7 +89,9 @@ export default function App() {
           </ul>
         ) : (
           <article className="m-4">
-            <p>{TextStrings.fallbackText}</p>
+            <p className="font-xmas-font font-bold text-xl">
+              {TextStrings.fallbackText}
+            </p>
           </article>
         )}
 
