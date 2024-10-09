@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import './index.css';
 
 type Gift = {
@@ -13,6 +13,9 @@ enum TextStrings {
   clearGiftsButton = 'Borrar lista',
   fallbackText = 'No hay regalos Grinch. Agrega uno!',
   quantityPlaceholder = ' x ',
+  deleteGiftButton = '❌',
+  MAX_ITEMS = '5',
+  MIN_ITEMS = '1',
 }
 
 const initialGiftState: Gift = {
@@ -20,9 +23,20 @@ const initialGiftState: Gift = {
   quantity: 1,
   id: 0,
 };
+
+const initialGiftsState = () => {
+  const localStorageGifts = localStorage.getItem('gifts');
+  return localStorageGifts
+    ? [...JSON.parse(localStorage.getItem('gifts')!)]
+    : [];
+};
 export default function App() {
   const [gift, setGift] = useState<Gift>(initialGiftState);
-  const [gifts, setGifts] = useState<Gift[]>([]);
+  const [gifts, setGifts] = useState<Gift[]>(initialGiftsState);
+
+  useEffect(() => {
+    localStorage.setItem('gifts', JSON.stringify(gifts));
+  }, [gifts]);
 
   const isGiftAlreadyAdded = useMemo(
     () => gifts.some((addedGift) => addedGift.name === gift.name),
@@ -86,10 +100,10 @@ export default function App() {
             id="quantity"
             name="quantity"
             value={gift.quantity}
-            min="1"
-            max="5"
+            min={TextStrings.MIN_ITEMS}
+            max={TextStrings.MAX_ITEMS}
             onChange={handleInputChange}
-            className="border border-black w-8 rounded-md"
+            className="px-2 border border-black w-12 rounded-md"
           />
 
           <button
@@ -113,10 +127,10 @@ export default function App() {
                     : `${TextStrings.quantityPlaceholder}${gift.quantity}`}
                 </li>
                 <button
-                  className="border bg-red-800 rounded-md text-slate-50 p-1"
+                  className="border bg-green-300 rounded-md text-slate-50 p-1"
                   onClick={() => handleGiftDelete(gift.id)}
                 >
-                  ❌
+                  {TextStrings.deleteGiftButton}
                 </button>
               </article>
             ))}
@@ -130,7 +144,7 @@ export default function App() {
         )}
 
         <button
-          className="border rounded-md border-red-500 m-2 p-2 bg-red-400 text-slate-50 font-bold"
+          className="w-11/12 border rounded-md border-red-500 m-2 p-2 bg-red-400 text-slate-50 font-bold"
           onClick={handleGiftClear}
         >
           {TextStrings.clearGiftsButton}
