@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import './index.css';
 
 type Gift = {
@@ -12,7 +12,7 @@ enum TextStrings {
   mainInputButton = 'Agregar',
   clearGiftsButton = 'Borrar lista',
   fallbackText = 'No hay regalos Grinch. Agrega uno!',
-  quantityPlaceholder = 'Cant: ',
+  quantityPlaceholder = ' x ',
 }
 
 const initialGiftState: Gift = {
@@ -24,23 +24,34 @@ export default function App() {
   const [gift, setGift] = useState<Gift>(initialGiftState);
   const [gifts, setGifts] = useState<Gift[]>([]);
 
+  const isGiftAlreadyAdded = useMemo(
+    () => gifts.some((addedGift) => addedGift.name === gift.name),
+    [gifts, gift.name]
+  );
   const handleGiftSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const isGiftAlreadyAdded = gifts.some(
-      (addedGift) => addedGift.name === gift.name
-    );
-    if (gift.name === '' || isGiftAlreadyAdded) {
+    if (!gift.name) {
+      alert('Debes agregar un regalo');
       return;
     }
-    setGifts([...gifts, gift]);
+
+    if (isGiftAlreadyAdded) {
+      const newGiftArray = gifts.filter(
+        (addedGift) => addedGift.name !== gift.name
+      );
+      setGifts([...newGiftArray, gift]);
+    } else {
+      setGifts([...gifts, gift]);
+    }
     setGift(initialGiftState);
   };
-  const handleGiftChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setGift({ ...gift, name: event.target.value });
-  };
 
-  const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setGift({ ...gift, quantity: +event.target.value });
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setGift({
+      ...gift,
+      [event.target.name]: event.target.value,
+      id: +Date.now(),
+    });
   };
 
   const handleGiftDelete = (id: Gift['id']) => {
@@ -64,7 +75,8 @@ export default function App() {
         >
           <input
             type="text"
-            onChange={handleGiftChange}
+            name="name"
+            onChange={handleInputChange}
             value={gift.name}
             placeholder="Ingresa un regalo"
             className="border border-green-300 rounded-md border-2 px-2 w-1/2 "
@@ -76,7 +88,7 @@ export default function App() {
             value={gift.quantity}
             min="1"
             max="5"
-            onChange={handleQuantityChange}
+            onChange={handleInputChange}
             className="border border-black w-8 rounded-md"
           />
 
@@ -90,10 +102,15 @@ export default function App() {
         {gifts.length > 0 ? (
           <ul className="flex flex-col justify-start w-full px-6 pt-4">
             {gifts.map((gift) => (
-              <article className="w-full flex flex-row justify-between">
-                <li key={gift.id}>
-                  {gift.name} {TextStrings.quantityPlaceholder}
-                  {gift.quantity}
+              <article
+                key={gift.id}
+                className="w-full flex flex-row justify-between"
+              >
+                <li>
+                  {gift.name}
+                  {gift.quantity === 1
+                    ? ''
+                    : `${TextStrings.quantityPlaceholder}${gift.quantity}`}
                 </li>
                 <button
                   className="border bg-red-800 rounded-md text-slate-50 p-1"
