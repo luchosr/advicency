@@ -14,13 +14,14 @@ enum TextStrings {
   fallbackText = 'No hay regalos Grinch. Agrega uno!',
   quantityPlaceholder = 'Cant: ',
 }
+
+const initialGiftState: Gift = {
+  name: '',
+  quantity: 1,
+  id: 0,
+};
 export default function App() {
-  const [gift, setGift] = useState<Gift>({
-    name: '',
-    quantity: 1,
-    id: +Date.now(),
-  });
-  const [giftQuantity, setGiftQuantity] = useState<Gift['quantity']>(1);
+  const [gift, setGift] = useState<Gift>(initialGiftState);
   const [gifts, setGifts] = useState<Gift[]>([]);
 
   const handleGiftSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -31,17 +32,15 @@ export default function App() {
     if (gift.name === '' || isGiftAlreadyAdded) {
       return;
     }
-    setGifts([...gifts, { name: gift.name, id: +Date.now(), quantity: 1 }]);
-    setGift({ name: '', quantity: 1, id: +Date.now() });
+    setGifts([...gifts, gift]);
+    setGift(initialGiftState);
   };
   const handleGiftChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setGift({ ...gift, name: event.target.value });
   };
 
   const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // setGift({ ...gift, quantity: +event.target.value });
-    setGiftQuantity(+event.target.value);
-    // console.log(+event.target.value);
+    setGift({ ...gift, quantity: +event.target.value });
   };
 
   const handleGiftDelete = (id: Gift['id']) => {
@@ -74,7 +73,7 @@ export default function App() {
             type="number"
             id="quantity"
             name="quantity"
-            value={giftQuantity}
+            value={gift.quantity}
             min="1"
             max="5"
             onChange={handleQuantityChange}
