@@ -4,6 +4,7 @@ import './index.css';
 type Gift = {
   name: string;
   id: number;
+  imgUrl: string;
   quantity: number;
 };
 
@@ -20,6 +21,7 @@ enum TextStrings {
 
 const initialGiftState: Gift = {
   name: '',
+  imgUrl: '',
   quantity: 1,
   id: 0,
 };
@@ -39,7 +41,10 @@ export default function App() {
   }, [gifts]);
 
   const isGiftAlreadyAdded = useMemo(
-    () => gifts.some((addedGift) => addedGift.name === gift.name),
+    () =>
+      gifts.some(
+        (addedGift) => addedGift.name.toLowerCase() === gift.name.toLowerCase()
+      ),
     [gifts, gift.name]
   );
   const handleGiftSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -77,7 +82,7 @@ export default function App() {
   };
   return (
     <main className=" flex items-center justify-center h-screen bg-xmass bg-cover ">
-      <div className=" flex items-center justify-center flex-col border border-red-600 border-4 w-auto pt-6 bg-white">
+      <div className=" flex items-center justify-center flex-col border border-red-600 border-4 rounded-md w-auto pt-6 bg-white">
         <h1 className="text-5xl font-bold underline mb-6 font-xmas-font ">
           {TextStrings.mainHeader}
         </h1>
@@ -85,7 +90,7 @@ export default function App() {
         <form
           action=""
           onSubmit={handleGiftSubmit}
-          className="flex flex-row justify-between mx-4 w-96"
+          className="flex flex-row justify-between mx-4 w-full px-4"
         >
           <input
             type="text"
@@ -93,7 +98,16 @@ export default function App() {
             onChange={handleInputChange}
             value={gift.name}
             placeholder="Ingresa un regalo"
-            className="border border-green-300 rounded-md border-2 px-2 w-1/2 "
+            className="border border-green-300 rounded-md border-2 px-2 w-1/3"
+          />
+
+          <input
+            type="text"
+            name="imgurl"
+            onChange={handleInputChange}
+            value={gift.imgUrl}
+            placeholder="URL Imagen:"
+            className="border border-green-300 rounded-md border-2 px-2 w-1/4 "
           />
           <input
             type="number"
@@ -103,7 +117,7 @@ export default function App() {
             min={TextStrings.MIN_ITEMS}
             max={TextStrings.MAX_ITEMS}
             onChange={handleInputChange}
-            className="px-2 border border-black w-12 rounded-md"
+            className="px-2 border border-green-300 w-12 rounded-md"
           />
 
           <button
@@ -120,7 +134,7 @@ export default function App() {
                 key={gift.id}
                 className="w-full flex flex-row justify-between"
               >
-                <li>
+                <li className="capitalize my-2">
                   {gift.name}
                   {gift.quantity === 1
                     ? ''
