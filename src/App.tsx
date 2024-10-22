@@ -1,68 +1,45 @@
-import { useEffect, useMemo, useState } from 'react';
-import './index.css';
+import { useEffect, useMemo } from "react";
+import "./index.css";
+import { useGifts } from "./hooks/useGifts";
+import { Gift, TextStrings } from "./types";
 
-type Gift = {
-  name: string;
-  id: number;
-  imgUrl: string;
-  quantity: number;
-};
-
-enum TextStrings {
-  mainHeader = 'Regalos:',
-  mainInputButton = 'Agregar',
-  clearGiftsButton = 'Borrar lista',
-  fallbackText = 'No hay regalos Grinch. Agrega uno!',
-  quantityPlaceholder = ' x ',
-  deleteGiftButton = '❌',
-  MAX_ITEMS = '5',
-  MIN_ITEMS = '1',
-}
-
-const initialGiftState: Gift = {
-  name: '',
-  imgUrl: '',
-  quantity: 1,
-  id: 0,
-};
-
-const initialGiftsState = () => {
-  const localStorageGifts = localStorage.getItem('gifts');
-  return localStorageGifts
-    ? [...JSON.parse(localStorage.getItem('gifts')!)]
-    : [];
-};
 export default function App() {
-  const [gift, setGift] = useState<Gift>(initialGiftState);
-  const [gifts, setGifts] = useState<Gift[]>(initialGiftsState);
+  const { gift, gifts, setGift, setGifts } = useGifts();
 
   useEffect(() => {
-    localStorage.setItem('gifts', JSON.stringify(gifts));
+    localStorage.setItem("gifts", JSON.stringify(gifts));
   }, [gifts]);
 
   const isGiftAlreadyAdded = useMemo(
     () =>
       gifts.some(
-        (addedGift) => addedGift.name.toLowerCase() === gift.name.toLowerCase()
+        (addedGift) => addedGift.name.toLowerCase() === gift.name.toLowerCase(),
       ),
-    [gifts, gift.name]
+    [gifts, gift.name],
   );
+
+  // const gifts = ['calcetines', 'chupetines', 'cuchillos'];
   const handleGiftSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!gift.name) {
-      alert('Debes agregar un regalo');
+      alert("Debes agregar un regalo");
       return;
     }
 
     if (isGiftAlreadyAdded) {
       const newGiftArray = gifts.filter(
-        (addedGift) => addedGift.name !== gift.name
+        (addedGift) => addedGift.name !== gift.name,
       );
       setGifts([...newGiftArray, gift]);
     } else {
       setGifts([...gifts, gift]);
     }
-    setGift(initialGiftState);
+    setGift({
+      name: "",
+      imgUrl: "",
+      quantity: 1,
+      id: 0,
+    });
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -73,7 +50,7 @@ export default function App() {
     });
   };
 
-  const handleGiftDelete = (id: Gift['id']) => {
+  const handleGiftDelete = (id: Gift["id"]) => {
     setGifts(gifts.filter((gift) => gift.id !== id));
   };
 
@@ -81,16 +58,16 @@ export default function App() {
     setGifts([]);
   };
   return (
-    <main className=" flex items-center justify-center h-screen bg-xmass bg-cover ">
-      <div className=" flex items-center justify-center flex-col border border-red-600 border-4 rounded-md w-auto pt-6 bg-white">
-        <h1 className="text-5xl font-bold underline mb-6 font-xmas-font ">
+    <main className="flex h-screen items-center justify-center bg-xmass bg-cover">
+      <div className="flex w-auto flex-col items-center justify-center rounded-md border border-4 border-red-600 bg-white pt-6">
+        <h1 className="mb-6 font-xmas-font text-5xl font-bold underline">
           {TextStrings.mainHeader}
         </h1>
 
         <form
           action=""
           onSubmit={handleGiftSubmit}
-          className="flex flex-row justify-between mx-4 w-full px-4"
+          className="mx-4 flex w-full flex-row justify-between px-4"
         >
           <input
             type="text"
@@ -98,16 +75,16 @@ export default function App() {
             onChange={handleInputChange}
             value={gift.name}
             placeholder="Ingresa un regalo"
-            className="border border-green-300 rounded-md border-2 px-2 w-1/3"
+            className="w-1/3 rounded-md border border-2 border-green-300 px-2"
           />
 
           <input
             type="text"
-            name="imgurl"
+            name="imgUrl"
             onChange={handleInputChange}
             value={gift.imgUrl}
             placeholder="URL Imagen:"
-            className="border border-green-300 rounded-md border-2 px-2 w-1/4 "
+            className="w-1/4 rounded-md border border-2 border-green-300 px-2"
           />
           <input
             type="number"
@@ -117,31 +94,39 @@ export default function App() {
             min={TextStrings.MIN_ITEMS}
             max={TextStrings.MAX_ITEMS}
             onChange={handleInputChange}
-            className="px-2 border border-green-300 w-12 rounded-md"
+            className="w-12 rounded-md border border-green-300 px-2"
           />
 
           <button
             type="submit"
-            className="border rounded-md border-red-500 mx-2 p-2 bg-red-400 text-slate-50 font-bold"
+            className="mx-2 rounded-md border border-red-500 bg-red-400 p-2 font-bold text-slate-50"
           >
             {TextStrings.mainInputButton}
           </button>
         </form>
         {gifts.length > 0 ? (
-          <ul className="flex flex-col justify-start w-full px-6 pt-4">
+          <ul className="flex w-full flex-col justify-start px-6 pt-4">
             {gifts.map((gift) => (
               <article
                 key={gift.id}
-                className="w-full flex flex-row justify-between"
+                className="flex w-full flex-row justify-between"
               >
-                <li className="capitalize my-2">
-                  {gift.name}
-                  {gift.quantity === 1
-                    ? ''
-                    : `${TextStrings.quantityPlaceholder}${gift.quantity}`}
+                <li className="my-2 flex h-10 flex-row capitalize">
+                  <img
+                    src={gift.imgUrl}
+                    alt={gift.name}
+                    width={40}
+                    height={40}
+                  />
+                  <span className="px-2 pt-2">
+                    {gift.name}
+                    {gift.quantity === 1
+                      ? ""
+                      : `${TextStrings.quantityPlaceholder}${gift.quantity}`}
+                  </span>
                 </li>
                 <button
-                  className="border bg-green-300 rounded-md text-slate-50 p-1"
+                  className="rounded-md border bg-green-300 p-1 text-slate-50"
                   onClick={() => handleGiftDelete(gift.id)}
                 >
                   {TextStrings.deleteGiftButton}
@@ -151,14 +136,14 @@ export default function App() {
           </ul>
         ) : (
           <article className="m-4">
-            <p className="font-xmas-font font-bold text-xl">
+            <p className="font-xmas-font text-xl font-bold">
               {TextStrings.fallbackText}
             </p>
           </article>
         )}
 
         <button
-          className="w-11/12 border rounded-md border-red-500 m-2 p-2 bg-red-400 text-slate-50 font-bold"
+          className="m-2 w-11/12 rounded-md border border-red-500 bg-red-400 p-2 font-bold text-slate-50"
           onClick={handleGiftClear}
         >
           {TextStrings.clearGiftsButton}
